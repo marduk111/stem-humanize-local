@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stem Humanize (Local)</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111;
+      --fg: #ddd;
+      --accent: #4b9bff;
+      --panel: #1b1b1b;
+      --border: #333;
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 24px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      max-width: 720px;
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+    }
+    input, select, button {
+      background: #151515;
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 8px;
+    }
+    button {
+      cursor: pointer;
+    }
+    button:hover {
+      background: #202020;
+    }
+    .sliders {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .hint {
+      color: #aaa;
+      font-size: 12px;
+    }
+    #status {
+      margin-top: 12px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stem Humanize — Local Test Runner</h1>
+  <div class="panel">
+    <div class="row">
+      <label>
+        Audio File
+        <input type="file" id="fileIn" accept="audio/*" />
+      </label>
+      <button id="micBtn">Use Mic</button>
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+    </div>
+
+    <div class="row">
+      <label>
+        Instrument Preset
+        <select id="presetSel">
+          <option value="leadVocal" selected>Lead Vox</option>
+          <option value="backingVocal">Bkg Vox</option>
+          <option value="drums">Drums</option>
+          <option value="bass">Bass</option>
+          <option value="guitar">Guitar</option>
+          <option value="keyboard">Keys</option>
+          <option value="strings">Strings</option>
+          <option value="synth">Synth</option>
+          <option value="brass">Brass</option>
+          <option value="woodwinds">Winds</option>
+          <option value="percussion">Perc</option>
+          <option value="fullMix">Full Mix</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="sliders">
+      <label>
+        Loose (Timing Looseness)
+        <input id="looseness" type="range" min="0" max="1" step="0.01" value="0.38" />
+        <span class="hint">0–1</span>
+      </label>
+      <label>
+        Organic
+        <input id="organic" type="range" min="0" max="1" step="0.01" value="0.35" />
+      </label>
+      <label>
+        Expr (Expression)
+        <input id="expression" type="range" min="0" max="1" step="0.01" value="0.25" />
+      </label>
+      <label>
+        Feel (Sluggish/Rushed)
+        <input id="bias" type="range" min="0" max="1" step="0.01" value="0.5" />
+        <span class="hint">0 Sluggish • 0.5 Neutral • 1 Rushed</span>
+      </label>
+      <label>
+        Sense (Transient)
+        <input id="sensitivity" type="range" min="0" max="1" step="0.01" value="0.45" />
+      </label>
+      <label>
+        Release (ms)
+        <input id="releaseMs" type="range" min="20" max="500" step="1" value="90" />
+      </label>
+      <label>
+        Mix
+        <input id="mix" type="range" min="0" max="1" step="0.01" value="0.38" />
+      </label>
+    </div>
+
+    <div id="status">Idle — load file or mic, then Start</div>
+    <p class="hint">
+      Note: Web Audio requires user gesture (Start) in some browsers. Loads the same logic as the plugin definition, approximated for realtime.
+    </p>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
