@@ -1,9 +1,22 @@
 class HumanizeProcessor extends AudioWorkletProcessor {
+  static get parameterDescriptors() {
+    return [
+      { name: 'preset', defaultValue: 0.0, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'looseness', defaultValue: 0.38, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'organic', defaultValue: 0.35, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'expression', defaultValue: 0.25, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'bias', defaultValue: 0.5, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'sensitivity', defaultValue: 0.45, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'releaseMs', defaultValue: 90, minValue: 20, maxValue: 500, automationRate: 'k-rate' },
+      { name: 'mix', defaultValue: 0.38, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+    ];
+  }
+
   constructor() {
     super();
     this.sampleRate = sampleRate;
     this.maxDelayMs = 0.02;
-    this.maxDelaySamples = Math.ceil(this.sampleRate * this.maxDelayMs) + 8;
+    this.maxDelaySamples = Math.ceil(this.sampleRate * this.maxDelayMs) + 16;
     this.delayLineL = new Float32Array(this.maxDelaySamples);
     this.delayLineR = new Float32Array(this.maxDelaySamples);
     this.writeIndex = 0;
@@ -16,19 +29,16 @@ class HumanizeProcessor extends AudioWorkletProcessor {
     // Noise generators (simple LCG) for smooth lowpassed drift
     this.rngA = 123456789;
     this.rngB = 362436069;
-    this.driftA = 0;
-    this.driftB = 0;
 
-    // LPF state for drift (biquad approximation simple)
+    // LPF state for drift
     this.driftALP = 0;
     this.driftBLP = 0;
 
     this.port.onmessage = (e) => {
       if (e.data && e.data.type === 'setSampleRate') {
         this.sampleRate = e.data.value;
-        const newMax = Math.ceil(this.sampleRate * 0.02) + 8;
+        const newMax = Math.ceil(this.sampleRate * 0.02) + 16;
         if (newMax > this.maxDelaySamples) {
-          // expand if needed (rare)
           this.delayLineL = new Float32Array(newMax);
           this.delayLineR = new Float32Array(newMax);
           this.maxDelaySamples = newMax;
