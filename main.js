@@ -96,23 +96,112 @@ async function setup() {
     }
   };
 
+  let currentFile = null;
+  let currentBuffer = null;
+
   fileIn.onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    currentFile = file;
     const buf = await file.arrayBuffer();
-    const ab = await audio.decodeAudioData(buf);
+    currentBuffer = await audio.decodeAudioData(buf);
     if (fileSource) { try { fileSource.stop(); } catch (_) {} fileSource.disconnect(); }
     fileSource = audio.createBufferSource();
-    fileSource.buffer = ab;
+    fileSource.buffer = currentBuffer;
     fileSource.loop = false;
-    if (micSource) { /* keep mic? allow both not easy; replace */ }
     fileSource.connect(node);
     fileSource.start();
     status.textContent = 'File playing: ' + file.name;
   };
 
+  function writeWav(buffer, sampleRate) {
+    const numChannels = buffer.numberOfChannels;
+    const length = buffer.length * numChannels * 2 + 44;
+    const arrayBuffer = new ArrayBuffer(length);
+    const view = new DataView(arrayBuffer);
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, 36 + buffer.length * numChannels * 2, true);
+    writeString(view, 8, 'WAVE');
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * numChannels * 2, true);
+    view.setUint16(32, numChannels * 2, true);
+    view.setUint16(34, 16, true);
+    writeString(view, 36, 'data');
+    view.setUint32(40, buffer.length * numChannels * 2, true);
+    let offset = 44;
+    for (let i = 0; i < buffer.length; i++) {
+      for (let ch = 0; ch < numChannels; ch++) {
+        const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+        offset += 2;
+      }
+    }
+    return arrayBuffer;
+  }
+
+  function writeString(view, offset, string) {
+    for (let i = 0; i < string.length; i++) {
+      view.setUint8(offset + i, string.charCodeAt(i));
+    }
+  }
+
+  async function exportWav() {
+    if (!currentBuffer) {
+      status.textContent = 'No file loaded to export. Load an audio file first.';
+      return;
+    }
+    const exportCtx = new OfflineAudioContext({
+      numberOfChannels: currentBuffer.numberOfChannels,
+      length: currentBuffer.length,
+      sampleRate: currentBuffer.sampleRate || audio.sampleRate
+    });
+    await exportCtx.audioWorklet.addModule('humanize-processor.js');
+    const expNode = new AudioWorkletNode(exportCtx, 'humanize-processor', {
+      numberOfInputs: 1,
+      numberOfOutputs: 1,
+      outputChannelCount: [currentBuffer.numberOfChannels]
+    });
+    const src = exportCtx.createBufferSource();
+    src.buffer = currentBuffer;
+    src.connect(expNode);
+    expNode.connect(exportCtx.destination);
+
+    const presetKey = presetSel.value;
+    const pIdx = presetMap[presetKey] / 11;
+    const params = expNode.parameters;
+    params.get('preset').value = pIdx;
+    params.get('looseness').value = +looseness.value;
+    params.get('organic').value = +organic.value;
+    params.get('expression').value = +expression.value;
+    params.get('bias').value = +bias.value;
+    params.get('sensitivity').value = +sensitivity.value;
+    params.get('releaseMs').value = +releaseMs.value;
+    params.get('mix').value = +mix.value;
+
+    src.start(0);
+    const rendered = await exportCtx.startRendering();
+    const wav = writeWav(rendered, exportCtx.sampleRate);
+    const url = URL.createObjectURL(new Blob([wav], { type: 'audio/wav' }));
+    const a = document.createElement('a');
+    a.href = url;
+    const base = currentFile?.name?.replace(/\.[^/.]+$/, '') || 'stem-humanized';
+    a.download = base + '-humanized.wav';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    status.textContent = 'Exported ' + a.download;
+  }
+
+  const exportBtn = document.getElementById('exportBtn');
+  if (exportBtn) exportBtn.onclick = exportWav;
+
   // expose
-  window.__humanize = { audio, node, updateAll };
+  window.__humanize = { audio, node, updateAll, exportWav };
   updateAll();
 }
 
