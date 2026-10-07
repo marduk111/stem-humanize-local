@@ -173,14 +173,19 @@ async function setup() {
     const presetKey = presetSel.value;
     const pIdx = presetMap[presetKey] / 11;
     const params = expNode.parameters;
-    params.get('preset').value = pIdx;
-    params.get('looseness').value = +looseness.value;
-    params.get('organic').value = +organic.value;
-    params.get('expression').value = +expression.value;
-    params.get('bias').value = +bias.value;
-    params.get('sensitivity').value = +sensitivity.value;
-    params.get('releaseMs').value = +releaseMs.value;
-    params.get('mix').value = +mix.value;
+  const set = (k, v) => {
+    const p = params.get(k);
+    if (p) p.value = v;
+    else console.warn('param missing', k);
+  };
+  set('preset', pIdx);
+  set('looseness', +looseness.value);
+  set('organic', +organic.value);
+  set('expression', +expression.value);
+  set('bias', +bias.value);
+  set('sensitivity', +sensitivity.value);
+  set('releaseMs', +releaseMs.value);
+  set('mix', +mix.value);
 
     src.start(0);
     const rendered = await exportCtx.startRendering();
