@@ -2,13 +2,13 @@ class HumanizeProcessor extends AudioWorkletProcessor {
   static get parameterDescriptors() {
     return [
       { name: 'preset', defaultValue: 0.0, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
-      { name: 'looseness', defaultValue: 0.38, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'looseness', defaultValue: 0.42, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
       { name: 'organic', defaultValue: 0.35, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
-      { name: 'expression', defaultValue: 0.25, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'expression', defaultValue: 0.15, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
       { name: 'bias', defaultValue: 0.5, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
-      { name: 'sensitivity', defaultValue: 0.45, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
-      { name: 'releaseMs', defaultValue: 90, minValue: 20, maxValue: 500, automationRate: 'k-rate' },
-      { name: 'mix', defaultValue: 0.38, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'sensitivity', defaultValue: 0.5, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
+      { name: 'releaseMs', defaultValue: 100, minValue: 20, maxValue: 500, automationRate: 'k-rate' },
+      { name: 'mix', defaultValue: 0.35, minValue: 0.0, maxValue: 1.0, automationRate: 'k-rate' },
     ];
   }
 
@@ -33,6 +33,12 @@ class HumanizeProcessor extends AudioWorkletProcessor {
     // LPF state for drift
     this.driftALP = 0;
     this.driftBLP = 0;
+
+    // Metering (throttled messages back to the UI)
+    this.meterBlocks = 0;
+    this.meterMotion = 0;
+    this.meterAttack = 0;
+    this.meterFrames = 0;
 
     this.port.onmessage = (e) => {
       if (e.data && e.data.type === 'setSampleRate') {
@@ -86,13 +92,13 @@ class HumanizeProcessor extends AudioWorkletProcessor {
 
     // Params (arrays, use [0])
     const preset = parameters['preset']?.[0] ?? 0.0; // 0..11 index mapped
-    const looseness = parameters['looseness']?.[0] ?? 0.38;
+    const looseness = parameters['looseness']?.[0] ?? 0.42;
     const organic = parameters['organic']?.[0] ?? 0.35;
-    const expression = parameters['expression']?.[0] ?? 0.25;
+    const expression = parameters['expression']?.[0] ?? 0.15;
     const bias = parameters['bias']?.[0] ?? 0.5; // 0..1
-    const sensitivity = parameters['sensitivity']?.[0] ?? 0.45;
-    const releaseMs = parameters['releaseMs']?.[0] ?? 90;
-    const mixAmt = parameters['mix']?.[0] ?? 0.38;
+    const sensitivity = parameters['sensitivity']?.[0] ?? 0.5;
+    const releaseMs = parameters['releaseMs']?.[0] ?? 100;
+    const mixAmt = parameters['mix']?.[0] ?? 0.35;
 
     // Preset max ms
     const presetMsList = [0.9, 1.4, 0.55, 0.8, 0.65, 1.1, 0.85, 1.25, 1.35, 1.0, 0.7, 0.75];
@@ -128,6 +134,10 @@ class HumanizeProcessor extends AudioWorkletProcessor {
       const relCoefHeld = 1 / relSamples;
       this.heldAttack = attackMask > this.heldAttack ? attackMask : this.heldAttack * (1 - relCoefHeld);
       const motionOpen = 1 - Math.min(1, this.heldAttack * 0.82);
+
+      this.meterMotion += motionOpen;
+      this.meterAttack += Math.min(1, this.heldAttack);
+      this.meterFrames++;
 
       // drift noise
       this.rngA = this.nextRng(this.rngA);
@@ -175,6 +185,23 @@ class HumanizeProcessor extends AudioWorkletProcessor {
       outL[i] = l * (1 - mixAmt) + vL * mixAmt;
       outR[i] = r * (1 - mixAmt) + vR * mixAmt;
     }
+
+    // Throttled telemetry for the UI (roughly 5-6 times per second at 48 kHz).
+    this.meterBlocks++;
+    if (this.meterBlocks >= 16) {
+      if (this.meterFrames > 0) {
+        this.port.postMessage({
+          type: 'meter',
+          motion: this.meterMotion / this.meterFrames,
+          attack: this.meterAttack / this.meterFrames
+        });
+      }
+      this.meterBlocks = 0;
+      this.meterMotion = 0;
+      this.meterAttack = 0;
+      this.meterFrames = 0;
+    }
+
     return true;
   }
 }

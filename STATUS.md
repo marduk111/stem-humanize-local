@@ -1,6 +1,6 @@
 # Status
 
-**Current version:** `1.2.0`  
+**Current version:** `1.3.0`  
 **Build:** local  
 **Repo:** [marduk111/stem-humanize-local](https://github.com/marduk111/stem-humanize-local)
 
@@ -9,10 +9,11 @@
 | Area | State | Notes |
 |---|---|---|
 | Realtime processing | Working | AudioWorklet (`humanize-processor.js`) with transient detection, variable micro-delay (max ~20 ms), expression motion, dry/wet mix, all presets. |
-| UI | Working | Updated layout with live slider values, source switching, suspend/resume. |
+| UI | Working | Guided six-step workflow (dropdown + Back/Next + progress), step-specific guidance, live readouts, waveform/playhead, A/B bypass, output level meter. Recommended defaults can be re-applied. |
 | File input | Working | Load any `audio/*`, disconnects mic on file load. |
 | Mic input | Working | `getUserMedia`, disconnects file on mic load. |
 | WAV export | Working | OfflineAudioContext render + 16-bit PCM WAV download. Renders the loaded file with current settings. |
+| Engine metering | Working | Worklet posts throttled movement/attack values for the transient-protection meters. |
 | Version display | Working | UI badge, title, footer, `/api/info`, tray tooltip, installer metadata. |
 | Changelog/release notes | Working | `CHANGELOG.md` embedded in app + in repo. |
 | Native server/launcher | Ready to build | `launcher/StemHumanizeServer.cs` - serves app, tray UI, opens browser, single instance. |
@@ -31,7 +32,8 @@
 - Export doesn't currently support the mic/live path (renders the loaded `currentBuffer` only).
 - Mic + file simultaneously not supported.
 - DSP is an approximation of the original graph (good for listening; could be tightened to match the DSL nodes exactly).
-- No drag-and-drop, A/B compare, or preset save/load yet.
+- No drag-and-drop yet.
+- A/B compares the current blend against the dry stem; it does not level-match automatically.
 - Auto-updates not implemented.
 
 ## Quick check to continue

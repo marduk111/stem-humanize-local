@@ -4,11 +4,11 @@ Transient-aware micro-timing and expression effect for rendered stems, running l
 your browser. You get adjustable timing looseness, organic drift, feel bias, transient
 protection, expression movement and a dry/wet mix — plus offline WAV export.
 
-Current version: **1.2.0** (see `VERSION`, `version.json`, `CHANGELOG.md`, `STATUS.md`).
+Current version: **1.3.0** (see `VERSION`, `version.json`, `CHANGELOG.md`, `STATUS.md`).
 
 ## Install (Windows)
 
-1. Download `StemHumanizeSetup-1.2.0.exe` from the [Releases page](https://github.com/marduk111/stem-humanize-local/releases).
+1. Download `StemHumanizeSetup-1.3.0.exe` from the [Releases page](https://github.com/marduk111/stem-humanize-local/releases).
 2. Double-click it and confirm.
 3. It installs to `%LOCALAPPDATA%\StemHumanize`, adds a **Desktop shortcut** and a Start Menu
    entry, and launches the app. Windows SmartScreen may warn because the installer is not
@@ -25,16 +25,27 @@ Start Menu shortcut.
 
 - **One-click:** `Start Stem Humanize.cmd` — uses `dist\portable\StemHumanizeServer.exe` when present,
   otherwise falls back to the Node dev server.
-- **Portable:** extract `StemHumanize-1.2.0-portable.zip` anywhere and run
+- **Portable:** extract `StemHumanize-1.3.0-portable.zip` anywhere and run
   `StemHumanizeServer.exe`.
 - **Dev server:** `node build/dev-server.js` then open the printed URL.
 
 ## Using the app
 
-1. Press **Start audio** (browsers require a user gesture before audio starts).
-2. Load a stem with **Audio file**, or use **Use mic**.
-3. Adjust the controls; they are live.
-4. Press **Export humanized WAV** to render the loaded file with the current settings.
+The app walks through six steps. Pick a step from the dropdown at the top, or use Back/Next;
+only the selected step is shown. The Source and Session panels stay visible throughout.
+
+1. **Load & listen** — press **Start audio** if the engine is idle, then choose a file (or use
+   the mic to check a take live). The file is decoded and starts playing.
+2. **Instrument preset** — choose the source type. The preset sets the maximum timing
+   movement allowed for that material.
+3. **Timing feel** — Loose, Organic and Feel shape the movement and its direction.
+4. **Transient protection** — Sense and Release control how attacks pause the movement.
+5. **Blend & expression** — Mix and Expr set how much processed layer you hear.
+6. **Check & export** — review the summary, then **Export humanized WAV**. The file renders
+   offline with the current settings and appears in your Downloads folder.
+
+Use **A/B** in the header at any time to compare against the untouched stem.
+**Apply recommended defaults** restores the conservative starting point.
 
 | Control | What it does |
 |---|---|
@@ -59,8 +70,8 @@ powershell -ExecutionPolicy Bypass -File .\build\build.ps1
 Outputs:
 
 - `dist\portable\` — runnable app folder
-- `dist\StemHumanize-1.2.0-portable.zip`
-- `dist\StemHumanizeSetup-1.2.0.exe` — the installer
+- `dist\StemHumanize-1.3.0-portable.zip`
+- `dist\StemHumanizeSetup-1.3.0.exe` — the installer
 
 `build.ps1` writes `version.json` from `VERSION`, generates the icon, compiles
 `launcher\StemHumanizeServer.cs`, stages the web app, then compiles

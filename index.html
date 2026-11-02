@@ -8,123 +8,475 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0f1115;
-      --fg: #e3e7ee;
-      --muted: #9aa3b2;
-      --accent: #4b9bff;
-      --panel: #171a20;
-      --panel-2: #1d212a;
-      --border: #2a2f3a;
+      --bg: #0c0e13;
+      --bg-2: #12151c;
+      --card: #161a22;
+      --card-2: #1b202a;
+      --line: #262c38;
+      --line-2: #333b4a;
+      --fg: #e6eaf2;
+      --fg-2: #b4bccb;
+      --muted: #8b95a7;
+      --accent: #5aa2ff;
+      --accent-2: #8fc0ff;
+      --good: #4cc38a;
+      --warn: #e8b45a;
+      --bad: #ef6d6d;
+      --radius: 14px;
     }
+
     * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(1200px 600px at 20% -10%, #1a2130 0%, var(--bg) 55%);
+      margin: 0;
+      font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
       color: var(--fg);
-      margin: 0;
-      padding: 28px 20px 40px;
+      background:
+        radial-gradient(1100px 520px at 15% -10%, #1a2333 0%, transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, #17222e 0%, transparent 55%),
+        var(--bg);
       min-height: 100vh;
+      padding: 26px 20px 44px;
     }
-    header {
+
+    .wrap { max-width: 1180px; margin: 0 auto; }
+
+    /* ---------------------------------------------------------------- header */
+
+    header.top {
       display: flex;
-      align-items: baseline;
-      gap: 10px;
+      align-items: center;
+      gap: 14px;
       flex-wrap: wrap;
-      max-width: 760px;
-      margin: 0 auto 14px;
+      margin-bottom: 18px;
     }
-    h1 {
+
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand h1 {
       margin: 0;
-      font-size: 21px;
+      font-size: 22px;
       font-weight: 650;
       letter-spacing: 0.2px;
     }
-    .badge {
-      font-size: 11px;
-      color: #bcd4ff;
-      background: rgba(75, 155, 255, 0.14);
-      border: 1px solid rgba(75, 155, 255, 0.35);
-      border-radius: 999px;
-      padding: 3px 9px;
-      white-space: nowrap;
-    }
-    .panel {
-      background: linear-gradient(180deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      max-width: 760px;
-      margin: 0 auto;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-    }
-    .row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      margin-bottom: 14px;
-    }
-    .row:last-child { margin-bottom: 0; }
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      min-width: 130px;
-      font-size: 13px;
+    .brand p {
+      margin: 0;
+      font-size: 12.5px;
       color: var(--muted);
     }
-    input, select, button {
+
+    .spacer { flex: 1 1 auto; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11.5px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--fg-2);
+      white-space: nowrap;
+    }
+    .pill .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--muted);
+      box-shadow: 0 0 0 3px rgba(140, 150, 170, 0.12);
+    }
+    .pill.live .dot { background: var(--good); box-shadow: 0 0 0 3px rgba(76, 195, 138, 0.16); }
+    .pill.suspended .dot { background: var(--warn); box-shadow: 0 0 0 3px rgba(232, 180, 90, 0.16); }
+
+    .ver {
+      font-size: 11.5px;
+      color: var(--accent-2);
+      border: 1px solid rgba(90, 162, 255, 0.35);
+      background: rgba(90, 162, 255, 0.1);
+      border-radius: 999px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    /* ---------------------------------------------------------------- layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    /* ---------------------------------------------------------------- steps */
+
+    .stepbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+
+    .stepbar label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--muted);
+    }
+
+    select, input[type="text"], input[type="number"] {
       font: inherit;
       font-size: 13px;
       color: var(--fg);
-      background: #12151b;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 7px 9px;
+      background: #10131a;
+      border: 1px solid var(--line-2);
+      border-radius: 9px;
+      padding: 8px 10px;
     }
-    input[type="file"] { color: var(--muted); }
-    input[type="range"] {
-      padding: 0;
-      accent-color: var(--accent);
-      background: transparent;
-      border: 0;
-      height: 22px;
+
+    select:focus-visible, input:focus-visible, button:focus-visible {
+      outline: 2px solid rgba(90, 162, 255, 0.55);
+      outline-offset: 1px;
     }
+
+    #stepSelect { min-width: 250px; flex: 0 1 auto; }
+
     button {
+      font: inherit;
+      font-size: 13px;
+      color: var(--fg);
+      background: #151922;
+      border: 1px solid var(--line-2);
+      border-radius: 9px;
+      padding: 8px 13px;
       cursor: pointer;
-      transition: background 120ms ease, border-color 120ms ease;
+      transition: background 120ms ease, border-color 120ms ease, transform 60ms ease;
     }
-    button:hover { background: #1b2028; border-color: #3b4250; }
-    button:active { transform: translateY(1px); }
+    button:hover:not(:disabled) { background: #1c222d; border-color: #414b5c; }
+    button:active:not(:disabled) { transform: translateY(1px); }
+    button:disabled { opacity: 0.5; cursor: default; }
+
     button.primary {
-      background: rgba(75, 155, 255, 0.16);
-      border-color: rgba(75, 155, 255, 0.5);
-      color: #d8e7ff;
+      background: linear-gradient(180deg, #3d8dff, #2f74e0);
+      border-color: #3d8dff;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 6px 18px rgba(61, 141, 255, 0.28);
     }
-    button.primary:hover { background: rgba(75, 155, 255, 0.24); }
-    .sliders {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 14px 18px;
+    button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #4b97ff, #3a80ea); }
+    button.ghost { background: transparent; }
+    button.active { border-color: rgba(90, 162, 255, 0.7); background: rgba(90, 162, 255, 0.14); color: #d9e8ff; }
+
+    .progress {
+      flex: 1 1 120px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      min-width: 80px;
     }
-    .sliders .value {
-      float: right;
-      color: #cfd7e6;
-      font-variant-numeric: tabular-nums;
+    .progress > i {
+      display: block;
+      height: 100%;
+      width: 16.6%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3d8dff, #7db9ff);
+      transition: width 220ms ease;
     }
-    .hint { color: var(--muted); font-size: 12px; }
-    #status {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
+
+    .stepcount {
+      font-size: 11.5px;
       color: var(--muted);
       font-variant-numeric: tabular-nums;
-      min-height: 18px;
+      white-space: nowrap;
     }
-    footer {
-      max-width: 760px;
-      margin: 16px auto 0;
+
+    /* ---------------------------------------------------------------- step body */
+
+    .step { display: none; padding: 20px 20px 24px; }
+    .step.on { display: block; animation: fade 180ms ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .step h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 640;
+    }
+    .step .lead {
+      margin: 0 0 18px;
+      color: var(--fg-2);
+      font-size: 13.5px;
+      max-width: 62ch;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+      gap: 8px 16px;
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.018);
+      font-size: 13px;
+    }
+    .kv dt { color: var(--muted); }
+    .kv dd { margin: 0; color: var(--fg); word-break: break-word; }
+
+    .callout {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 11px 13px;
+      border-radius: 10px;
+      border: 1px solid rgba(90, 162, 255, 0.22);
+      background: rgba(90, 162, 255, 0.07);
+      font-size: 12.8px;
+      color: #c7d9f4;
+      margin: 0 0 16px;
+    }
+    .callout.warn {
+      border-color: rgba(232, 180, 90, 0.28);
+      background: rgba(232, 180, 90, 0.08);
+      color: #ecd2a2;
+    }
+    .callout .ico { flex: 0 0 auto; font-size: 13px; line-height: 1.4; opacity: 0.9; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px 22px;
+      margin-bottom: 6px;
+    }
+
+    .ctrl { display: flex; flex-direction: column; gap: 6px; }
+    .ctrl .top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .ctrl .name { font-size: 13px; font-weight: 600; color: var(--fg); }
+    .ctrl .val {
+      font-size: 12.5px;
+      color: var(--accent-2);
+      font-variant-numeric: tabular-nums;
+      background: rgba(90, 162, 255, 0.1);
+      border-radius: 6px;
+      padding: 1px 7px;
+    }
+    .ctrl .sub { font-size: 11.5px; color: var(--muted); }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 24px;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(90, 162, 255, 0.65), rgba(90, 162, 255, 0.16));
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 15px; height: 15px;
+      margin-top: -5.5px;
+      border-radius: 50%;
+      background: #eaf2ff;
+      border: 2px solid #3d8dff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    input[type="range"]::-moz-range-track {
+      height: 4px; border-radius: 999px;
+      background: rgba(90, 162, 255, 0.3);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px; border: 2px solid #3d8dff;
+      border-radius: 50%; background: #eaf2ff;
+    }
+
+    .readout {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.018);
+    }
+    .readout h3 {
+      margin: 0 0 8px;
+      font-size: 11px;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .readout .line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12.8px;
+      padding: 3px 0;
+      color: var(--fg-2);
+    }
+    .readout .line b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .readout .hint { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+    .meter {
+      margin-top: 12px;
+    }
+    .meter .head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .meter .track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+    .meter .track > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3d8dff, #8fc0ff);
+      transition: width 90ms linear;
+    }
+    .meter.risk .track > i { background: linear-gradient(90deg, var(--good), var(--warn) 55%, var(--bad)); }
+
+    /* ---------------------------------------------------------------- source card */
+
+    .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 20px; }
+    @media (max-width: 980px) { .side { position: static; } }
+
+    .card .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card .head h2 {
+      margin: 0;
+      font-size: 11.5px;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .card .body { padding: 14px 15px 16px; }
+
+    #wave {
+      width: 100%;
+      height: 84px;
+      display: block;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--line);
+    }
+
+    .filemeta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: 10px 0 12px;
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 34px;
+    }
+    .filemeta .name { color: var(--fg); font-size: 13px; font-weight: 600; word-break: break-word; }
+    .filemeta .sub { font-variant-numeric: tabular-nums; }
+
+    .transport { display: flex; gap: 8px; flex-wrap: wrap; }
+    .transport button { padding: 7px 11px; }
+    .transport label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted); padding: 7px 4px;
+    }
+    input[type="checkbox"] { accent-color: var(--accent); width: 14px; height: 14px; }
+
+    .srcline {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .srcline button { flex: 1 1 auto; }
+    #fileIn { display: none; }
+
+    .leveltrack {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .leveltrack > i {
+      display: block; height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--good), #9fe0bd);
+      transition: width 60ms linear;
+    }
+
+    /* ---------------------------------------------------------------- session card */
+
+    .sess-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12.5px;
+      padding: 4px 0;
+      color: var(--muted);
+    }
+    .sess-row b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .badge {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid var(--line-2);
+      color: var(--fg-2);
+    }
+    .badge.good { color: #b8f0d4; border-color: rgba(76, 195, 138, 0.4); background: rgba(76, 195, 138, 0.1); }
+    .badge.warn { color: #f0d8a8; border-color: rgba(232, 180, 90, 0.4); background: rgba(232, 180, 90, 0.1); }
+    .badge.bad { color: #f4c2c2; border-color: rgba(239, 109, 109, 0.4); background: rgba(239, 109, 109, 0.1); }
+
+    .actions { display: grid; gap: 8px; margin-top: 14px; }
+    .actions button { width: 100%; }
+
+    .status {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 32px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* ---------------------------------------------------------------- footer */
+
+    footer.bottom {
+      max-width: 1180px;
+      margin: 18px auto 0;
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
@@ -132,128 +484,398 @@
       font-size: 12px;
       color: var(--muted);
     }
-    footer a {
+    footer.bottom a {
       color: #a9c6f5;
       text-decoration: none;
-      border-bottom: 1px dotted rgba(169, 198, 245, 0.4);
+      border-bottom: 1px dotted rgba(169, 198, 245, 0.35);
     }
-    footer a:hover { color: #d7e6ff; }
-    details {
-      margin-top: 14px;
-      border-top: 1px solid var(--border);
-      padding-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
+    footer.bottom a:hover { color: #d7e6ff; }
+
+    details.notes { margin-top: 4px; }
+    details.notes summary {
+      cursor: pointer;
+      color: var(--accent-2);
+      font-size: 12.5px;
     }
-    details summary { cursor: pointer; color: #bcd4ff; }
-    details pre {
+    details.notes pre {
       white-space: pre-wrap;
       font-size: 11.5px;
-      line-height: 1.5;
-      max-height: 220px;
+      line-height: 1.55;
+      max-height: 260px;
       overflow: auto;
-      background: #10131a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
+      background: #0f1218;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--fg-2);
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Stem Humanize</h1>
-    <span class="badge" id="verBadge">v&hellip;</span>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>Stem Humanize</h1>
+      <p>Add natural micro-timing and expression to a rendered stem — locally, nothing uploaded.</p>
+    </div>
+    <div class="spacer"></div>
+    <span class="ver" id="verBadge">v&hellip;</span>
+    <span class="pill suspended" id="enginePill"><span class="dot"></span><span id="engineText">Engine idle</span></span>
+    <button id="bypassBtn" title="Compare against the untouched stem">A/B: processed</button>
   </header>
 
-  <div class="panel">
-    <div class="row">
-      <label>
-        Audio file
-        <input type="file" id="fileIn" accept="audio/*" />
-      </label>
-      <button id="micBtn">Use mic</button>
-      <button id="stopSrcBtn">Stop source</button>
-    </div>
+  <div class="layout">
 
-    <div class="row">
-      <label>
-        Instrument preset
-        <select id="presetSel">
-          <option value="leadVocal" selected>Lead Vox</option>
-          <option value="backingVocal">Bkg Vox</option>
-          <option value="drums">Drums</option>
-          <option value="bass">Bass</option>
-          <option value="guitar">Guitar</option>
-          <option value="keyboard">Keys</option>
-          <option value="strings">Strings</option>
-          <option value="synth">Synth</option>
-          <option value="brass">Brass</option>
-          <option value="woodwinds">Winds</option>
-          <option value="percussion">Perc</option>
-          <option value="fullMix">Full Mix</option>
+    <!-- ============================================================ main stage -->
+    <section class="card stage">
+
+      <div class="stepbar">
+        <label for="stepSelect">Step</label>
+        <select id="stepSelect">
+          <option value="0">1 · Load &amp; listen</option>
+          <option value="1">2 · Instrument preset</option>
+          <option value="2">3 · Timing feel</option>
+          <option value="3">4 · Transient protection</option>
+          <option value="4">5 · Blend &amp; expression</option>
+          <option value="5">6 · Check &amp; export</option>
         </select>
-      </label>
-    </div>
+        <button id="prevStep" class="ghost" title="Previous step">Back</button>
+        <button id="nextStep" class="ghost" title="Next step">Next</button>
+        <div class="progress"><i id="stepProgress"></i></div>
+        <span class="stepcount" id="stepCount">1 / 6</span>
+      </div>
 
-    <div class="sliders">
-      <label>
-        Loose <span class="value" id="loosenessVal">0.38</span>
-        <input id="looseness" type="range" min="0" max="1" step="0.01" value="0.38" />
-        <span class="hint">Size of the timing movement</span>
-      </label>
-      <label>
-        Organic <span class="value" id="organicVal">0.35</span>
-        <input id="organic" type="range" min="0" max="1" step="0.01" value="0.35" />
-        <span class="hint">Slow natural drift</span>
-      </label>
-      <label>
-        Expr <span class="value" id="expressionVal">0.25</span>
-        <input id="expression" type="range" min="0" max="1" step="0.01" value="0.25" />
-        <span class="hint">Level motion on the wet layer</span>
-      </label>
-      <label>
-        Feel <span class="value" id="biasVal">0.50</span>
-        <input id="bias" type="range" min="0" max="1" step="0.01" value="0.5" />
-        <span class="hint">Sluggish &harr; rushed</span>
-      </label>
-      <label>
-        Sense <span class="value" id="sensitivityVal">0.45</span>
-        <input id="sensitivity" type="range" min="0" max="1" step="0.01" value="0.45" />
-        <span class="hint">Transient reaction</span>
-      </label>
-      <label>
-        Release <span class="value" id="releaseMsVal">90</span>
-        <input id="releaseMs" type="range" min="20" max="500" step="1" value="90" />
-        <span class="hint">Recovery after an attack (ms)</span>
-      </label>
-      <label>
-        Mix <span class="value" id="mixVal">0.38</span>
-        <input id="mix" type="range" min="0" max="1" step="0.01" value="0.38" />
-        <span class="hint">Dry &harr; humanized</span>
-      </label>
-    </div>
+      <!-- ---------------------------------------------------------- step 1 -->
+      <div class="step on" data-step="0">
+        <h2>Load a stem and hear it</h2>
+        <p class="lead">
+          Load one rendered stem (vocal, drum, bass, guitar…). Everything runs inside this app on your
+          machine — no uploads, no accounts. Use the untouched render where you can; avoid re-encoded
+          MP3s if a WAV or FLAC is available.
+        </p>
 
-    <div class="row" style="margin-top: 16px;">
-      <button id="startBtn" class="primary">Start audio</button>
-      <button id="stopBtn">Suspend audio</button>
-      <button id="exportBtn">Export humanized WAV</button>
-    </div>
+        <div class="callout">
+          <span class="ico">&#9432;</span>
+          <span>
+            Press <b>Start audio</b> once if the engine is idle — browsers block sound until you interact.
+            Then use <b>Play</b> in the Source panel to preview.
+          </span>
+        </div>
 
-    <div id="status">Idle &mdash; load a stem or use the mic, then press Start audio.</div>
+        <dl class="kv" id="srcInfo">
+          <dt>File</dt><dd id="infoFile">No file loaded</dd>
+          <dt>Format</dt><dd id="infoFormat">—</dd>
+          <dt>Level</dt><dd id="infoLevel">—</dd>
+          <dt>Status</dt><dd id="infoStatus">Waiting for a file</dd>
+        </dl>
 
-    <details>
-      <summary>Version &amp; release notes</summary>
-      <pre id="changelog">Loading&hellip;</pre>
-    </details>
+        <div id="srcWarnings"></div>
+
+        <div class="controls">
+          <div class="ctrl">
+            <div class="top"><span class="name">Audio file</span></div>
+            <button id="chooseFileBtn" class="primary">Choose audio file…</button>
+            <span class="sub">WAV, FLAC, AIFF, MP3, M4A, OGG — whatever your browser can decode.</span>
+          </div>
+          <div class="ctrl">
+            <div class="top"><span class="name">Live input</span></div>
+            <button id="micBtn">Use microphone</button>
+            <span class="sub">For checking a take live. Export needs a file.</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>What to listen for</h3>
+          <div class="line"><span>Attacks (consonants, picks, drum hits)</span><b>should stay sharp</b></div>
+          <div class="line"><span>Sustain and tails</span><b>can move slightly</b></div>
+          <p class="hint">
+            Humanization should be felt more than heard. If you can hear a wobble or a doubled attack,
+            go back and reduce <b>Mix</b> or raise <b>Sense</b>.
+          </p>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- step 2 -->
+      <div class="step" data-step="1">
+        <h2>Choose the instrument preset</h2>
+        <p class="lead">
+          The preset sets the <b>maximum</b> timing movement allowed for that source. Percussive material
+          gets a tighter ceiling than sustained material, because short attacks expose movement first.
+        </p>
+
+        <div class="controls">
+          <div class="ctrl">
+            <div class="top"><span class="name">Instrument preset</span></div>
+            <select id="presetSel" aria-label="Instrument preset">
+              <option value="leadVocal">Lead Vox</option>
+              <option value="backingVocal">Bkg Vox</option>
+              <option value="drums">Drums</option>
+              <option value="bass">Bass</option>
+              <option value="guitar">Guitar</option>
+              <option value="keyboard">Keys</option>
+              <option value="strings">Strings</option>
+              <option value="synth">Synth</option>
+              <option value="brass">Brass</option>
+              <option value="woodwinds">Winds</option>
+              <option value="percussion">Perc</option>
+              <option value="fullMix">Full Mix</option>
+            </select>
+            <span class="sub">Match the single source you loaded.</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>What this preset does</h3>
+          <div class="line"><span>Movement ceiling</span><b id="presetCeiling">0.90 ms</b></div>
+          <div class="line"><span>Best for</span><b id="presetBest">—</b></div>
+          <p class="hint" id="presetHint">—</p>
+        </div>
+
+        <div class="callout warn">
+          <span class="ico">&#9888;</span>
+          <span>
+            Use <b>Full Mix</b> only when you cannot split the song into stems. Movement has to be kept
+            very small there, so the result is subtle.
+          </span>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- step 3 -->
+      <div class="step" data-step="2">
+        <h2>Shape the timing feel</h2>
+        <p class="lead">
+          <b>Loose</b> sets how far timing can travel, <b>Organic</b> sets how slowly that travel wanders,
+          and <b>Feel</b> leans the whole performance slightly early or late.
+        </p>
+
+        <div class="controls">
+          <div class="ctrl">
+            <div class="top"><span class="name">Loose</span><span class="val" id="loosenessVal">0.42</span></div>
+            <input id="looseness" type="range" min="0" max="1" step="0.01" value="0.42" aria-label="Loose" />
+            <span class="sub">Size of the timing displacement</span>
+          </div>
+          <div class="ctrl">
+            <div class="top"><span class="name">Organic</span><span class="val" id="organicVal">0.35</span></div>
+            <input id="organic" type="range" min="0" max="1" step="0.01" value="0.35" aria-label="Organic" />
+            <span class="sub">Slow drift instead of obvious jitter</span>
+          </div>
+          <div class="ctrl">
+            <div class="top"><span class="name">Feel</span><span class="val" id="biasVal">0.50</span></div>
+            <input id="bias" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Feel" />
+            <span class="sub">Sluggish &harr; neutral &harr; rushed</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>Live timing readout</h3>
+          <div class="line"><span>Maximum extra delay</span><b id="maxDelay">—</b></div>
+          <div class="line"><span>Average delay</span><b id="avgDelay">—</b></div>
+          <div class="line"><span>Bias</span><b id="biasReadout">—</b></div>
+          <p class="hint" id="timingHint">—</p>
+        </div>
+
+        <div class="callout">
+          <span class="ico">&#9432;</span>
+          <span>
+            Micro-timing under about <b>0.5 ms</b> is felt as looseness without changing the groove.
+            Above roughly <b>1 ms</b> on a solo instrument it starts to sound like a performance choice.
+          </span>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- step 4 -->
+      <div class="step" data-step="3">
+        <h2>Protect the attacks</h2>
+        <p class="lead">
+          Every detected attack temporarily pauses the timing movement. <b>Sense</b> decides how easily an
+          attack is detected; <b>Release</b> decides how long the movement stays settled afterwards.
+        </p>
+
+        <div class="controls">
+          <div class="ctrl">
+            <div class="top"><span class="name">Sense</span><span class="val" id="sensitivityVal">0.50</span></div>
+            <input id="sensitivity" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="Sense" />
+            <span class="sub">How readily attacks pause the movement</span>
+          </div>
+          <div class="ctrl">
+            <div class="top"><span class="name">Release</span><span class="val" id="releaseMsVal">100</span></div>
+            <input id="releaseMs" type="range" min="20" max="500" step="1" value="100" aria-label="Release (milliseconds)" />
+            <span class="sub">Settle time after an attack</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>Live detector</h3>
+          <div class="meter">
+            <div class="head"><span>Attacks protected</span><span id="attackPct">0%</span></div>
+            <div class="track"><i id="attackBar"></i></div>
+          </div>
+          <div class="meter">
+            <div class="head"><span>Movement allowed</span><span id="motionPct">100%</span></div>
+            <div class="track"><i id="motionBar"></i></div>
+          </div>
+          <p class="hint" id="transientHint">—</p>
+        </div>
+
+        <div class="callout warn">
+          <span class="ico">&#9888;</span>
+          <span>
+            If the meter shows attacks protected almost constantly on a dense stem, the effect is being
+            muted by design. Lower <b>Sense</b> or shorten <b>Release</b> to let movement back in.
+          </span>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- step 5 -->
+      <div class="step" data-step="4">
+        <h2>Blend and add expression</h2>
+        <p class="lead">
+          <b>Mix</b> decides how much of the humanized layer you hear. <b>Expr</b> adds a very slow level
+          drift so the processed layer does not feel static. Keep the blend low: the moment you can hear
+          two versions at once, transients begin to smear.
+        </p>
+
+        <div class="controls">
+          <div class="ctrl">
+            <div class="top"><span class="name">Mix</span><span class="val" id="mixVal">0.35</span></div>
+            <input id="mix" type="range" min="0" max="1" step="0.01" value="0.35" aria-label="Mix" />
+            <span class="sub">Dry &harr; humanized</span>
+          </div>
+          <div class="ctrl">
+            <div class="top"><span class="name">Expr</span><span class="val" id="expressionVal">0.15</span></div>
+            <input id="expression" type="range" min="0" max="1" step="0.01" value="0.15" aria-label="Expression" />
+            <span class="sub">Slow level motion on the wet layer</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>Transparency check</h3>
+          <div class="line"><span>Artifact risk (estimate)</span><b id="riskLabel">—</b></div>
+          <div class="meter risk">
+            <div class="track"><i id="riskBar"></i></div>
+          </div>
+          <div class="line" style="margin-top:10px"><span>Level motion depth</span><b id="exprDepth">—</b></div>
+          <p class="hint" id="blendHint">—</p>
+          <p class="hint">
+            This is a rough estimate from the settings, not an analysis of the audio. Trust your
+            ears and the A/B comparison more than the number.
+          </p>
+        </div>
+
+        <div class="callout">
+          <span class="ico">&#9432;</span>
+          <span>
+            Use the <b>A/B</b> button in the header to flip between the processed and untouched stem
+            without losing your settings. If a difference jumps out at you, the blend is probably too high.
+          </span>
+        </div>
+      </div>
+
+      <!-- ---------------------------------------------------------- step 6 -->
+      <div class="step" data-step="5">
+        <h2>Check the settings and export</h2>
+        <p class="lead">
+          Export renders the loaded file offline with exactly these settings — faster than realtime, and
+          without capturing anything else playing on the machine.
+        </p>
+
+        <dl class="kv">
+          <dt>Source file</dt><dd id="exportFile">—</dd>
+          <dt>Preset</dt><dd id="exportPreset">—</dd>
+          <dt>Timing</dt><dd id="exportTiming">—</dd>
+          <dt>Blend / expression</dt><dd id="exportBlend">—</dd>
+          <dt>Output</dt><dd id="exportOutput">—</dd>
+        </dl>
+
+        <div class="controls">
+          <div class="ctrl">
+            <button id="exportBtnMain" class="primary">Export humanized WAV</button>
+            <span class="sub" id="exportHint">Renders the loaded file with the current settings.</span>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>Before you export</h3>
+          <div class="line"><span>Original</span><b id="chkOriginal">—</b></div>
+          <div class="line"><span>Humanized</span><b id="chkHumanized">—</b></div>
+          <div class="line"><span>Artifact risk</span><b id="chkRisk">—</b></div>
+          <p class="hint">
+            Keep the original file. Compare the two versions on headphones and on a phone speaker before
+            you commit — small timing changes can read very differently on each.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ side -->
+    <aside class="side">
+
+      <section class="card">
+        <div class="head">
+          <h2>Source</h2>
+          <button id="stopSrcBtn" class="ghost" style="padding:4px 9px;font-size:11.5px">Stop</button>
+        </div>
+        <div class="body">
+          <canvas id="wave" width="640" height="168"></canvas>
+          <div class="filemeta">
+            <span class="name" id="fileName">No file loaded</span>
+            <span class="sub" id="fileSub">Choose a file to begin</span>
+          </div>
+          <div class="transport">
+            <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="restartBtn">Restart</button>
+            <label><input type="checkbox" id="loopChk" /> Loop</label>
+          </div>
+          <div class="leveltrack" title="Output level"><i id="levelBar"></i></div>
+          <input type="file" id="fileIn" accept="audio/*" />
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <h2>Session</h2>
+          <span class="badge good" id="sessionBadge">low risk</span>
+        </div>
+        <div class="body">
+          <div class="sess-row"><span>Preset</span><b id="sessPreset">Lead Vox</b></div>
+          <div class="sess-row"><span>Timing movement</span><b id="sessTiming">—</b></div>
+          <div class="sess-row"><span>Transient protection</span><b id="sessProtect">—</b></div>
+          <div class="sess-row"><span>Mix / Expr</span><b id="sessBlend">—</b></div>
+
+          <div class="actions">
+            <button id="applyDefaultBtn">Apply recommended defaults</button>
+            <button id="startBtn" class="primary">Start audio</button>
+            <button id="exportBtn">Export humanized WAV</button>
+          </div>
+          <div class="status" id="status" role="status" aria-live="polite">Idle — load a stem, then press Start audio.</div>
+        </div>
+      </section>
+
+      <details class="notes">
+        <summary>Version &amp; release notes</summary>
+        <pre id="changelog">Loading&hellip;</pre>
+      </details>
+
+    </aside>
   </div>
 
-  <footer>
+  <footer class="bottom">
     <span id="buildInfo">&nbsp;</span>
     <a href="CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
     <a href="STATUS.md" target="_blank" rel="noopener">Project status</a>
     <a href="README.md" target="_blank" rel="noopener">Readme</a>
   </footer>
+</div>
 
-  <script type="module" src="main.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>

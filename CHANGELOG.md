@@ -2,6 +2,37 @@
 
 All notable changes to Stem Humanize. Versions follow `MAJOR.MINOR.PATCH`.
 
+## 1.3.0 — 2026-11-03
+
+### Added
+- Guided six-step workflow: Load & listen, Instrument preset, Timing feel,
+  Transient protection, Blend & expression, Check & export. Steps are chosen one at a time
+  from the dropdown (or Back/Next), with a progress bar; only the current step is shown.
+- Step-specific guidance and live readouts: preset movement ceiling and best use, timing
+  displacement, attack-protection meters from the audio engine, and an artifact-risk
+  estimate.
+- Source panel with waveform and playhead, Play / Pause / Restart / Loop, and an output
+  level meter.
+- Header A/B button to compare the processed blend against the untouched stem without
+  losing settings.
+- "Apply recommended defaults" action.
+- Live meter messages from the AudioWorklet (movement allowed, attacks protected).
+- Source-file checks: peak level, clipping, sample rate, lossy format, very quiet input,
+  and long-file warning.
+
+### Changed
+- New conservative starting point for the least audible degradation: Lead Vox preset,
+  Loose 0.42, Organic 0.35, Expr 0.15, Sense 0.50, Release 100 ms, Mix 0.35. That keeps
+  timing movement near 0.15 ms, protects attacks, and uses a low blend. This is a safe
+  baseline for A/B comparison, not a guarantee about any detection system.
+- Full UI redesign: clearer hierarchy, step cards, consistent controls, accessible labels.
+- The risk number is now explicitly labelled an estimate derived from settings, not an
+  analysis of the rendered audio.
+
+### Fixed
+- Changing Mix while A/B bypass is active is now remembered when switching back to the
+  processed signal.
+
 ## 1.2.0 — 2026-11-03
 
 ### Added
