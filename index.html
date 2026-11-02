@@ -3,92 +3,181 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stem Humanize (Local)</title>
+  <title>Stem Humanize</title>
+  <link rel="icon" href="favicon.ico" />
   <style>
     :root {
       color-scheme: dark;
-      --bg: #111;
-      --fg: #ddd;
+      --bg: #0f1115;
+      --fg: #e3e7ee;
+      --muted: #9aa3b2;
       --accent: #4b9bff;
-      --panel: #1b1b1b;
-      --border: #333;
+      --panel: #171a20;
+      --panel-2: #1d212a;
+      --border: #2a2f3a;
     }
+    * { box-sizing: border-box; }
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, #1a2130 0%, var(--bg) 55%);
       color: var(--fg);
       margin: 0;
-      padding: 24px;
+      padding: 28px 20px 40px;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto 14px;
     }
     h1 {
-      margin: 0 0 12px;
-      font-size: 20px;
+      margin: 0;
+      font-size: 21px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+    }
+    .badge {
+      font-size: 11px;
+      color: #bcd4ff;
+      background: rgba(75, 155, 255, 0.14);
+      border: 1px solid rgba(75, 155, 255, 0.35);
+      border-radius: 999px;
+      padding: 3px 9px;
+      white-space: nowrap;
     }
     .panel {
-      background: var(--panel);
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      max-width: 720px;
+      border-radius: 12px;
+      padding: 18px;
+      max-width: 760px;
+      margin: 0 auto;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
     .row {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 12px;
+      align-items: flex-end;
+      margin-bottom: 14px;
     }
+    .row:last-child { margin-bottom: 0; }
     label {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      min-width: 120px;
+      gap: 5px;
+      min-width: 130px;
+      font-size: 13px;
+      color: var(--muted);
     }
     input, select, button {
-      background: #151515;
+      font: inherit;
+      font-size: 13px;
       color: var(--fg);
+      background: #12151b;
       border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 6px 8px;
+      border-radius: 7px;
+      padding: 7px 9px;
+    }
+    input[type="file"] { color: var(--muted); }
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--accent);
+      background: transparent;
+      border: 0;
+      height: 22px;
     }
     button {
       cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease;
     }
-    button:hover {
-      background: #202020;
+    button:hover { background: #1b2028; border-color: #3b4250; }
+    button:active { transform: translateY(1px); }
+    button.primary {
+      background: rgba(75, 155, 255, 0.16);
+      border-color: rgba(75, 155, 255, 0.5);
+      color: #d8e7ff;
     }
+    button.primary:hover { background: rgba(75, 155, 255, 0.24); }
     .sliders {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px 18px;
     }
-    .hint {
-      color: #aaa;
-      font-size: 12px;
+    .sliders .value {
+      float: right;
+      color: #cfd7e6;
+      font-variant-numeric: tabular-nums;
     }
+    .hint { color: var(--muted); font-size: 12px; }
     #status {
-      margin-top: 12px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
       font-size: 12px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      min-height: 18px;
+    }
+    footer {
+      max-width: 760px;
+      margin: 16px auto 0;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer a {
+      color: #a9c6f5;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(169, 198, 245, 0.4);
+    }
+    footer a:hover { color: #d7e6ff; }
+    details {
+      margin-top: 14px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    details summary { cursor: pointer; color: #bcd4ff; }
+    details pre {
+      white-space: pre-wrap;
+      font-size: 11.5px;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow: auto;
+      background: #10131a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Stem Humanize — Local Test Runner</h1>
+  <header>
+    <h1>Stem Humanize</h1>
+    <span class="badge" id="verBadge">v&hellip;</span>
+  </header>
+
   <div class="panel">
     <div class="row">
       <label>
-        Audio File
+        Audio file
         <input type="file" id="fileIn" accept="audio/*" />
       </label>
-      <button id="micBtn">Use Mic</button>
-      <button id="startBtn">Start</button>
-      <button id="stopBtn">Stop</button>
-      <button id="exportBtn">Export WAV</button>
+      <button id="micBtn">Use mic</button>
+      <button id="stopSrcBtn">Stop source</button>
     </div>
 
     <div class="row">
       <label>
-        Instrument Preset
+        Instrument preset
         <select id="presetSel">
           <option value="leadVocal" selected>Lead Vox</option>
           <option value="backingVocal">Bkg Vox</option>
@@ -108,42 +197,63 @@
 
     <div class="sliders">
       <label>
-        Loose (Timing Looseness)
+        Loose <span class="value" id="loosenessVal">0.38</span>
         <input id="looseness" type="range" min="0" max="1" step="0.01" value="0.38" />
-        <span class="hint">0–1</span>
+        <span class="hint">Size of the timing movement</span>
       </label>
       <label>
-        Organic
+        Organic <span class="value" id="organicVal">0.35</span>
         <input id="organic" type="range" min="0" max="1" step="0.01" value="0.35" />
+        <span class="hint">Slow natural drift</span>
       </label>
       <label>
-        Expr (Expression)
+        Expr <span class="value" id="expressionVal">0.25</span>
         <input id="expression" type="range" min="0" max="1" step="0.01" value="0.25" />
+        <span class="hint">Level motion on the wet layer</span>
       </label>
       <label>
-        Feel (Sluggish/Rushed)
+        Feel <span class="value" id="biasVal">0.50</span>
         <input id="bias" type="range" min="0" max="1" step="0.01" value="0.5" />
-        <span class="hint">0 Sluggish • 0.5 Neutral • 1 Rushed</span>
+        <span class="hint">Sluggish &harr; rushed</span>
       </label>
       <label>
-        Sense (Transient)
+        Sense <span class="value" id="sensitivityVal">0.45</span>
         <input id="sensitivity" type="range" min="0" max="1" step="0.01" value="0.45" />
+        <span class="hint">Transient reaction</span>
       </label>
       <label>
-        Release (ms)
+        Release <span class="value" id="releaseMsVal">90</span>
         <input id="releaseMs" type="range" min="20" max="500" step="1" value="90" />
+        <span class="hint">Recovery after an attack (ms)</span>
       </label>
       <label>
-        Mix
+        Mix <span class="value" id="mixVal">0.38</span>
         <input id="mix" type="range" min="0" max="1" step="0.01" value="0.38" />
+        <span class="hint">Dry &harr; humanized</span>
       </label>
     </div>
 
-    <div id="status">Idle — load file or mic, then Start</div>
-    <p class="hint">
-      Export renders the current file with your settings offline (so it's fast and clean). For mic, export isn't available unless you record first.
-    </p>
+    <div class="row" style="margin-top: 16px;">
+      <button id="startBtn" class="primary">Start audio</button>
+      <button id="stopBtn">Suspend audio</button>
+      <button id="exportBtn">Export humanized WAV</button>
+    </div>
+
+    <div id="status">Idle &mdash; load a stem or use the mic, then press Start audio.</div>
+
+    <details>
+      <summary>Version &amp; release notes</summary>
+      <pre id="changelog">Loading&hellip;</pre>
+    </details>
   </div>
+
+  <footer>
+    <span id="buildInfo">&nbsp;</span>
+    <a href="CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+    <a href="STATUS.md" target="_blank" rel="noopener">Project status</a>
+    <a href="README.md" target="_blank" rel="noopener">Readme</a>
+  </footer>
+
   <script type="module" src="main.js"></script>
 </body>
 </html>
